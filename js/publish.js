@@ -53,3 +53,75 @@ pubsub.sublish('topic1',function(topic,args){
 pubsub.publish('topic1','hello');
 
 pubsub.publish('topic1','world');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var pubsub = (function(q){
+
+  var q = {};
+  var topics = {};
+  var subId = 0;
+
+  // 发布
+  q.publish = function(topic,args){
+
+      if (!topics[topic]) {
+        return false;
+      };
+
+      var top = topics[topic];
+      var len = top.length;
+
+      while (len--) {
+        top[len].callback(args);
+      };
+  };
+
+  // 订阅
+  q.sublish = function(topic,callback){
+
+    topic = topics[topic] = [];
+
+    topic.push({
+      subId:++subId,
+      callback: callback
+    });
+  };
+
+  return q;
+})();
+
+// 订阅内容
+pubsub.sublish('topic1',function(args){
+  console.log(args + ' topic1');
+});
+
+pubsub.sublish('topic2',function(args){
+  console.log(args + ' topic2');
+});
+
+// 发布
+pubsub.publish('topic1','args');
+pubsub.publish('topic2','args');
